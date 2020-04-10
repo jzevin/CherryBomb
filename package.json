@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js",
+    "patch": "npm version patch",
+    "patch-publish": "npm run build && npm run patch && publish"
   },
   "repository": {
     "type": "git",
