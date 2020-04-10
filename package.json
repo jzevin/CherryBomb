@@ -1,0 +1,30 @@
+{
+  "name": "cherrybomb",
+  "version": "1.0.1",
+  "description": "HTML 5 Canvas framework, that makes it easier and more fun to work with any canvas element.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c rollup.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phillyDesignr/CherryBomb.git"
+  },
+  "keywords": [
+    "HTML",
+    "HTML5",
+    "Canvas",
+    "JavaScript",
+    "Framework"
+  ],
+  "author": "Jeremy Zevin (https:zev.in)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phillyDesignr/CherryBomb/issues"
+  },
+  "homepage": "https://github.com/phillyDesignr/CherryBomb#readme",
+  "devDependencies": {
+    "rollup": "^2.4.0"
+  }
+}
