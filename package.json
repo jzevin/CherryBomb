@@ -1,6 +1,6 @@
 {
   "name": "cherrybomb",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "HTML 5 Canvas framework, that makes it easier and more fun to work with any canvas element.",
   "main": "index.js",
   "scripts": {
