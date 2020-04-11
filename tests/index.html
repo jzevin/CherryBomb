@@ -8,7 +8,9 @@
 <body>
 
   <style>
-    body { background-color: #111;}
+    html, body { height: 100%; margin: 0;}
+    body { background-color: #333; overflow: hidden;}
+    #cnv { background-color: blanchedalmond;}
   </style>
 
   <canvas id="cnv"></canvas>
@@ -20,8 +22,17 @@
       scene1 = new CherryBomb.scene('the beginning... blast off!'),
       scene2 = new CherryBomb.scene('the middle.');
       scene3 = new CherryBomb.scene('the end.');
+      vo = new CherryBomb.viewObject(45, 90, window.innerWidth, window.innerHeight);
+      vt1 = new CherryBomb.viewText('Scene 1', 'vt1', 0, 0, 150, 40);
+      vt2 = new CherryBomb.viewText('Scene 2', 'vt2', 0, 45, 150, 40);
+      vt3 = new CherryBomb.viewText('Scene 3', 'vt3', 0, 90, 150, 40);
     
     console.log(bmb);
+
+    scene1.addChild(vt1);
+    scene2.addChild(vt2);
+    scene3.addChild(vt3);
+    
     bmb.view.addScene(scene1);
     bmb.view.changeScene(scene1);
     bmb.view.addScene(scene2);
@@ -32,10 +43,11 @@
         bmb.view.changeScene(scene2);
       setTimeout(() => {
         bmb.view.changeScene(scene3);
-        bmb.stop();
-        bmb.view.removeScene(scene1);
-      }, 30);
-    }, 10);
+        setTimeout(() => {
+          bmb.stop();
+        }, 500);
+      }, 500);
+    }, 500);
     
   </script>
 </body>

@@ -1,10 +1,8 @@
 'use strict';
 
-function log(ctx, ...stuff) {
-  const prefix = ctx.constructor.name;
-  console.log(`${prefix}=>`);
-  console.log('\t', ...stuff);
-}
+import { log } from "./lib/utils";
+import CherryBombViewObject from "./lib/viewObject";
+import CherryBombViewText from "./lib/viewText";
 
 class CherryBombScene {
   constructor(name) {
@@ -12,11 +10,22 @@ class CherryBombScene {
     this.name = name;
     this.children = [];
   }
+  addChild(viewObject) {
+    this.children.push(viewObject)
+  }
+  removeChild(viewObject) {
+    this.children = this.children.filter( child => child !== viewObject);
+  }
   update(t) {
     log(this, `${this.name} update`);
   }
   render(t, ctx) {
-    log(this, `${this.name} render`);
+    ctx.clearRect(0 ,0, ctx.canvas.width, ctx.canvas.height);
+    log(this, `${this.name} render`, this.children[0]);
+    this.children.forEach( child => {
+      ctx.drawImage(child.render(), child.x, child.y, child.width, child.height);
+      child.update();
+    });
   }
 }
 
@@ -56,6 +65,8 @@ class CherryBombSceneManager {
 class CherryBombRenderer {
   constructor(canvasEl) {
     this.ctx = canvasEl.getContext('2d');
+    this.ctx.canvas.width = window.innerWidth;
+    this.ctx.canvas.height = window.innerHeight;
     this.sceneManager = new CherryBombSceneManager();
   }
   addScene(scene, setAsActive=false) {
@@ -101,5 +112,8 @@ class CherryBombProduction {
 //
 export default {
   production: CherryBombProduction,
-  scene: CherryBombScene
+  scene: CherryBombScene,
+  // for now
+  viewObject: CherryBombViewObject,
+  viewText: CherryBombViewText
 }

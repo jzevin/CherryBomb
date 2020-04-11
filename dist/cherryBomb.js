@@ -5,9 +5,73 @@
 }(this, (function () { 'use strict';
 
   function log(ctx, ...stuff) {
-    const prefix = ctx.constructor.name;
-    console.log(`${prefix}=>`);
-    console.log('\t', ...stuff);
+    return;
+  }
+
+  class CherryBombViewObject {
+    constructor(name, x=0, y=0, width=10, height=40, rotation=0, scale=1) {
+      this.name = name;
+      this.ctx = document.createElement('canvas').getContext('2d');
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.scale = scale;
+      this.rotation = rotation;
+      // log(this, this)
+    }
+    get width() {
+      return this.ctx.canvas.width;
+    }
+    set width(value) {
+      this.ctx.canvas.width = value;
+    }
+    get height() {
+      return this.ctx.canvas.height;
+    }
+    set height(value) {
+      this.ctx.canvas.height = value;
+    }
+    // NOTE: can optimize if no changes since last render
+    render() {
+      // this.ctx.fillText('tototototootot', this.x, this.y);
+      return this.ctx.canvas;
+    }
+  }
+
+  class CherryBombViewText extends CherryBombViewObject {
+    constructor(text='', name, x, y, width, height, rotation, scale) {
+      super(name, x, y, width, height, rotation, scale);
+      this.text = text;
+    }
+    get width() {
+      return this.ctx.canvas.width;
+    }
+    set width(value) {
+      this.ctx.canvas.width = value;
+    }
+    get height() {
+      return this.ctx.canvas.height;
+    }
+    set height(value) {
+      this.ctx.canvas.height = value;
+    }
+    update() {
+      this.x += 1;
+      this.y += 1;
+    }
+    render() {
+      this.ctx.save();
+      this.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.0125)';
+      this.ctx.fillRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = 'hsla(0, 20%, 100%, 1)';
+      this.ctx.fillRect(0, 0, 10, 20);
+      this.ctx.fillStyle = 'darkorange';
+      this.ctx.font = '20px sans-serif';
+      this.ctx.fillText(this.text, 0, 20, this.width);
+      this.ctx.restore();
+      return this.ctx.canvas;
+    }
   }
 
   class CherryBombScene {
@@ -16,11 +80,22 @@
       this.name = name;
       this.children = [];
     }
+    addChild(viewObject) {
+      this.children.push(viewObject);
+    }
+    removeChild(viewObject) {
+      this.children = this.children.filter( child => child !== viewObject);
+    }
     update(t) {
       log(this, `${this.name} update`);
     }
     render(t, ctx) {
-      log(this, `${this.name} render`);
+      ctx.clearRect(0 ,0, ctx.canvas.width, ctx.canvas.height);
+      log(this, `${this.name} render`, this.children[0]);
+      this.children.forEach( child => {
+        ctx.drawImage(child.render(), child.x, child.y, child.width, child.height);
+        child.update();
+      });
     }
   }
 
@@ -60,6 +135,8 @@
   class CherryBombRenderer {
     constructor(canvasEl) {
       this.ctx = canvasEl.getContext('2d');
+      this.ctx.canvas.width = window.innerWidth;
+      this.ctx.canvas.height = window.innerHeight;
       this.sceneManager = new CherryBombSceneManager();
     }
     addScene(scene, setAsActive=false) {
@@ -73,7 +150,6 @@
       this.sceneManager.activeScene = scene;
     }
     render(t) {
-      log(this, 'render');
       if (!this.sceneManager.activeScene) return;
       this.sceneManager.activeScene.render(t, this.ctx);
     }
@@ -89,11 +165,9 @@
     play() {
       this.shouldStep = true;
       window.requestAnimationFrame(this.step);
-      log(this, 'play');
     }
     stop() {
       this.shouldStep = false;
-      log(this, 'stop');
     }
     step(t) {
       if(this.shouldStep) window.requestAnimationFrame(this.step);
@@ -105,7 +179,10 @@
   //
   var CherryBomb = {
     production: CherryBombProduction,
-    scene: CherryBombScene
+    scene: CherryBombScene,
+    // for now
+    viewObject: CherryBombViewObject,
+    viewText: CherryBombViewText
   };
 
   return CherryBomb;
