@@ -1,20 +1,33 @@
 // SUPER NAIVE TESTS
 
 import CherryBomb from "../src/CherryBomb";
-import {expect} from "chai";
+import {expect, assert} from "chai";
+import {JSDOM} from "jsdom";
+import canvas from "canvas";
 
-// describe('Array', function() {
-//   describe('#indexOf()', function() {
-//     it('should return -1 when the value is not present', function() {
-//       assert.equal([1, 2, 3].indexOf(4), -1);
-//     });
-//   });
-// });
+const {window: win} = new JSDOM('<!doctype html><html><body><canvas id="cnv"></canvas></body></html>');
+
+global.document = win.document;
+global.window = win.defaultView;
+window = win;
+
+console.log(document.querySelector('canvas'));
+
+
+const
+  canvasELMock = {
+    getContext: () => {
+      return {
+        canvas: { width: 0, height: 0 },
+      };
+    },
+  };
 
 describe('CherryBomb', () => {
   describe('#production', () => {
     it('should have production', () => {
       expect(CherryBomb).to.have.property('production');
+      assert.typeOf(new CherryBomb.production(document.querySelector('canvas')), 'object');
     });
   });
   describe('#scene', () => {
@@ -31,14 +44,7 @@ describe('CherryBomb', () => {
 // make the second one active
 // remove the first
 
-// const
-//   canvasELMock = {
-//     getContext: () => {
-//       return {
-//         canvas: { width: 0, height: 0 },
-//       };
-//     },
-//   };
+
 
 // describe("CherryBomb is a CherryBomb", () => {
 //   let myProduction, myScenes;
