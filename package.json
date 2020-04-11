@@ -4,7 +4,7 @@
   "description": "HTML 5 Canvas framework, that makes it easier and more fun to work with any canvas element.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --config jest.config.js",
     "build": "rollup -c rollup.config.js",
     "build-watch": "rollup -c rollup.config.js --watch",
     "patch": "npm version patch",
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/phillyDesignr/CherryBomb#readme",
   "devDependencies": {
+    "jest": "^25.3.0",
     "rollup": "^2.4.0"
   }
 }
