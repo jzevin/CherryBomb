@@ -1,8 +1,9 @@
 'use strict';
 
 function log(ctx, ...stuff) {
-  const prefix = ctx.constructor.toString().split('{')[0].replace('class ','')
-  console.log(`${prefix}=>`, ...stuff);
+  const prefix = ctx.constructor.name;
+  console.log(`${prefix}=>`);
+  console.log('\t', ...stuff);
 }
 
 class CherryBombScene {
@@ -16,7 +17,6 @@ class CherryBombScene {
   }
   render(t, ctx) {
     log(this, `${this.name} render`, ctx);
-
   }
 }
 
@@ -41,7 +41,8 @@ class CherryBombSceneManager {
     log(this, 'scene removed', this.scenes);
   }
   reIndexScenes() {
-    // can be made more efficient by only looking at the removals index
+    // NOTE: can be made more efficient by only looking 
+    // at the removals index
     this.scenes.forEach((scene,i) => scene.sceneIndex = i)
   }
   set activeScene(scene) {
@@ -60,6 +61,9 @@ class CherryBombRenderer {
   addScene(scene, setAsActive=false) {
     this.sceneManager.add(scene, setAsActive);
   }
+  removeScene(scene) {
+    this.sceneManager.remove(scene);
+  }
   changeScene(scene) {
     this.sceneManager.activeScene = scene;
   }
@@ -73,15 +77,18 @@ class CherryBombRenderer {
 class CherryBombProduction {
   constructor(canvasEl) {
     this.shouldStep = false;
+    this.prevRafTimestamp = 0;
     this.step = this.step.bind(this);
     this.view = new CherryBombRenderer(canvasEl);
   }
   play() {
     this.shouldStep = true;
     window.requestAnimationFrame(this.step);
+    log(this, 'play');
   }
   stop() {
     this.shouldStep = false;
+    log(this, 'stop');
   }
   changeScenes() {
 
@@ -91,7 +98,8 @@ class CherryBombProduction {
   }
   step(t) {
     if(this.shouldStep) window.requestAnimationFrame(this.step);
-    log(this, `- main loop -`, t);
+    log(this, `- main loop -`, t - this.prevRafTimestamp);
+    this.prevRafTimestamp = t;
     this.view.render(t);
   }
 }
