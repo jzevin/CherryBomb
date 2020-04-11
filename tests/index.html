@@ -17,7 +17,7 @@
   <script>
     const 
       bmb = new CherryBomb.production(document.querySelector('#cnv')),
-      scene1 = new CherryBomb.scene('blast off!'),
+      scene1 = new CherryBomb.scene('the beginning... blast off!'),
       scene2 = new CherryBomb.scene('the middle.');
       scene3 = new CherryBomb.scene('the end.');
     
@@ -33,7 +33,7 @@
       setTimeout(() => {
         bmb.view.changeScene(scene3);
         bmb.stop();
-        bmb.view.removeScene(scene3);
+        bmb.view.removeScene(scene1);
       }, 30);
     }, 10);
     

@@ -20,7 +20,7 @@
       log(this, `${this.name} update`);
     }
     render(t, ctx) {
-      log(this, `${this.name} render`, ctx);
+      log(this, `${this.name} render`);
     }
   }
 
@@ -66,6 +66,7 @@
       this.sceneManager.add(scene, setAsActive);
     }
     removeScene(scene) {
+      // NOTE: need checking if the user is removing an active scene
       this.sceneManager.remove(scene);
     }
     changeScene(scene) {
@@ -93,12 +94,6 @@
     stop() {
       this.shouldStep = false;
       log(this, 'stop');
-    }
-    changeScenes() {
-
-    }
-    setActiveScene() {
-
     }
     step(t) {
       if(this.shouldStep) window.requestAnimationFrame(this.step);
