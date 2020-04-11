@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <style>
+    body { background-color: #111;}
+  </style>
+
+  <canvas id="cnv"></canvas>
+  
+  <script src="../dist/cherryBomb.js"></script>
+  <script>
+    const 
+      bmb = new CherryBomb.production(document.querySelector('#cnv')),
+      scene1 = new CherryBomb.scene('blast off!'),
+      scene2 = new CherryBomb.scene('the middle.');
+      scene3 = new CherryBomb.scene('the end.');
+    
+    console.log(bmb);
+    bmb.view.addScene(scene1);
+    bmb.view.changeScene(scene1);
+    bmb.view.addScene(scene2);
+    bmb.play();
+
+    setTimeout(() => {
+        bmb.view.addScene(scene3);
+        bmb.view.changeScene(scene2);
+      setTimeout(() => {
+        bmb.view.changeScene(scene3);
+        bmb.stop();
+        bmb.view.removeScene(scene3);
+      }, 30);
+    }, 10);
+    
+  </script>
+</body>
+</html>
