@@ -7,6 +7,7 @@ function log(ctx, ...stuff) {
 
 class CherryBombScene {
   constructor(name) {
+    this.sceneIndex = 0;
     this.name = name;
     this.children = [];
   }
@@ -25,19 +26,29 @@ class CherryBombSceneManager {
     this.scenes = [];
   }
   add(scene, setAsActive=false) {
-    log(this, 'scene added');
     this.scenes.push(scene);
-    this.activeScene = scene;
+    if (setAsActive) {
+      this.activeScene = scene;
+    }
+    this.reIndexScenes();
+    
+    log(this, 'scene added', this.scenes);
+    return this.scenes;
   }
   remove(scene) {
-    this.scenes = this.scenes.filter(scn => scn !== scene);
+    this.scenes = this.scenes.filter((scn) => scn !== scene);
+    this.reIndexScenes();
     log(this, 'scene removed', this.scenes);
   }
+  reIndexScenes() {
+    // can be made more efficient by only looking at the removals index
+    this.scenes.forEach((scene,i) => scene.sceneIndex = i)
+  }
   set activeScene(scene) {
-    this.#__.activeScene = scene;
+    this.#__.activeSceneIndex = scene.sceneIndex;
   }
   get activeScene() {
-    return this.#__.activeScene;
+    return this.scenes[ this.#__.activeSceneIndex ];
   }
 }
 
@@ -49,21 +60,37 @@ class CherryBombRenderer {
   addScene(scene, setAsActive=false) {
     this.sceneManager.add(scene, setAsActive);
   }
+  changeScene(scene) {
+    this.sceneManager.activeScene = scene;
+  }
   render(t) {
     log(this, 'render');
-    if (!this.sceneManager.scenes.length) return;
+    if (!this.sceneManager.activeScene) return;
     this.sceneManager.activeScene.render(t, this.ctx);
   }
 }
 
 class CherryBombProduction {
   constructor(canvasEl) {
+    this.shouldStep = false;
     this.step = this.step.bind(this);
     this.view = new CherryBombRenderer(canvasEl);
+  }
+  play() {
+    this.shouldStep = true;
     window.requestAnimationFrame(this.step);
   }
+  stop() {
+    this.shouldStep = false;
+  }
+  changeScenes() {
+
+  }
+  setActiveScene() {
+
+  }
   step(t) {
-    // window.requestAnimationFrame(this.step);
+    if(this.shouldStep) window.requestAnimationFrame(this.step);
     log(this, `- main loop -`, t);
     this.view.render(t);
   }
