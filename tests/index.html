@@ -23,15 +23,47 @@
       scene2 = new CherryBomb.scene('the middle.');
       scene3 = new CherryBomb.scene('the end.');
       vo = new CherryBomb.viewObject(45, 90, window.innerWidth, window.innerHeight);
-      vt1 = new CherryBomb.viewText('Scene 1', 'vt1', 0, 0, 150, 40);
-      vt2 = new CherryBomb.viewText('Scene 2', 'vt2', 0, 45, 150, 40);
-      vt3 = new CherryBomb.viewText('Scene 3', 'vt3', 0, 90, 150, 40);
+      text1 = new CherryBomb.viewText('viewText 1', 'text1', 0, 0, 150, 40);
+      text2 = new CherryBomb.viewText('viewText 2', 'text2', 0, 45, 150, 40);
+      text3 = new CherryBomb.viewText('viewText 3', 'text3', 0, 90, 150, 40);
+
+    function render1(viewText) {
+      viewText.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.95)';
+      viewText.ctx.fillRect(0, 0, viewText.width, viewText.height);
+      viewText.ctx.fillStyle = 'hsla(0, 20%, 100%, 1)';
+      viewText.ctx.fillRect(viewText.foo, 0, 10, 20);
+      viewText.ctx.fillStyle = 'darkorange';
+      viewText.ctx.font = '20px sans-serif';
+      viewText.ctx.fillText(viewText.text, 0, 20, viewText.width);
+      return viewText.ctx.canvas;
+    }
     
     console.log(bmb);
+    
+    text1.foo = 0;
+    text1.render = () => {
+      text1.foo += 1;
+      text1.x+=0.5;
+      return render1(text1);
+    };
+    text2.foo = 0;
+    text2.render = () => {
+      text2.foo += 2;
+      text2.x++;
+      return render1(text2);
+    };
+    text3.foo = 0;
+    text3.render = () => {
+      text3.foo += 3;
+      text3.x++;
+      if (text3.foo > text3.width) text3.foo = 0;
+      return render1(text3);
+    };
 
-    scene1.addChild(vt1);
-    scene2.addChild(vt2);
-    scene3.addChild(vt3);
+    scene1.addChild(text1);
+    scene2.addChild(text2);
+    scene3.addChild(text1);
+    scene3.addChild(text3);
     
     bmb.view.addScene(scene1);
     bmb.view.changeScene(scene1);
@@ -45,9 +77,9 @@
         bmb.view.changeScene(scene3);
         setTimeout(() => {
           bmb.stop();
-        }, 500);
-      }, 500);
-    }, 500);
+        }, 3500);
+      }, 1500);
+    }, 1500);
     
   </script>
 </body>

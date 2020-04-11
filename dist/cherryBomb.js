@@ -57,19 +57,11 @@
       this.ctx.canvas.height = value;
     }
     update() {
-      this.x += 1;
-      this.y += 1;
+      // this.x += 1;
+      // this.y += 1;
+      // this.foo += 2;
     }
     render() {
-      this.ctx.save();
-      this.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.0125)';
-      this.ctx.fillRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = 'hsla(0, 20%, 100%, 1)';
-      this.ctx.fillRect(0, 0, 10, 20);
-      this.ctx.fillStyle = 'darkorange';
-      this.ctx.font = '20px sans-serif';
-      this.ctx.fillText(this.text, 0, 20, this.width);
-      this.ctx.restore();
       return this.ctx.canvas;
     }
   }
