@@ -1,13 +1,10 @@
-function resizeCanvas(canvas) {
-
-}
+import Vector2d from './vector2d';
 
 export default class CherryBombViewObject {
   constructor(name, x=0, y=0, width=10, height=40, rotation=0, scale=1) {
     this.name = name;
     this.ctx = document.createElement('canvas').getContext('2d');
-    this.x = x;
-    this.y = y;
+    this.pos = new Vector2d(x, y);
     this.width = width;
     this.height = height;
     this.scale = scale;

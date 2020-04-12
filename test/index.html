@@ -43,19 +43,19 @@
     text1.foo = 0;
     text1.render = () => {
       text1.foo += 1;
-      text1.x+=0.5;
+      text1.pos.x+=0.5;
       return render1(text1);
     };
     text2.foo = 0;
     text2.render = () => {
       text2.foo += 2;
-      text2.x++;
+      text2.pos.x++;
       return render1(text2);
     };
     text3.foo = 0;
     text3.render = () => {
       text3.foo += 3;
-      text3.x++;
+      text3.pos.x++;
       if (text3.foo > text3.width) text3.foo = 0;
       return render1(text3);
     };

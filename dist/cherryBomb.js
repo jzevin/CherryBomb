@@ -8,64 +8,6 @@
     return;
   }
 
-  class CherryBombViewObject {
-    constructor(name, x=0, y=0, width=10, height=40, rotation=0, scale=1) {
-      this.name = name;
-      this.ctx = document.createElement('canvas').getContext('2d');
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.scale = scale;
-      this.rotation = rotation;
-      // log(this, this)
-    }
-    get width() {
-      return this.ctx.canvas.width;
-    }
-    set width(value) {
-      this.ctx.canvas.width = value;
-    }
-    get height() {
-      return this.ctx.canvas.height;
-    }
-    set height(value) {
-      this.ctx.canvas.height = value;
-    }
-    // NOTE: can optimize if no changes since last render
-    render() {
-      // this.ctx.fillText('tototototootot', this.x, this.y);
-      return this.ctx.canvas;
-    }
-  }
-
-  class CherryBombViewText extends CherryBombViewObject {
-    constructor(text='', name, x, y, width, height, rotation, scale) {
-      super(name, x, y, width, height, rotation, scale);
-      this.text = text;
-    }
-    get width() {
-      return this.ctx.canvas.width;
-    }
-    set width(value) {
-      this.ctx.canvas.width = value;
-    }
-    get height() {
-      return this.ctx.canvas.height;
-    }
-    set height(value) {
-      this.ctx.canvas.height = value;
-    }
-    update() {
-      // this.x += 1;
-      // this.y += 1;
-      // this.foo += 2;
-    }
-    render() {
-      return this.ctx.canvas;
-    }
-  }
-
   class Vector2d {
     constructor(x = 0, y = 0) {
       this.x = x;
@@ -160,6 +102,63 @@
     }
   }
 
+  class CherryBombViewObject {
+    constructor(name, x=0, y=0, width=10, height=40, rotation=0, scale=1) {
+      this.name = name;
+      this.ctx = document.createElement('canvas').getContext('2d');
+      this.pos = new Vector2d(x, y);
+      this.width = width;
+      this.height = height;
+      this.scale = scale;
+      this.rotation = rotation;
+      // log(this, this)
+    }
+    get width() {
+      return this.ctx.canvas.width;
+    }
+    set width(value) {
+      this.ctx.canvas.width = value;
+    }
+    get height() {
+      return this.ctx.canvas.height;
+    }
+    set height(value) {
+      this.ctx.canvas.height = value;
+    }
+    // NOTE: can optimize if no changes since last render
+    render() {
+      // this.ctx.fillText('tototototootot', this.x, this.y);
+      return this.ctx.canvas;
+    }
+  }
+
+  class CherryBombViewText extends CherryBombViewObject {
+    constructor(text='', name, x, y, width, height, rotation, scale) {
+      super(name, x, y, width, height, rotation, scale);
+      this.text = text;
+    }
+    get width() {
+      return this.ctx.canvas.width;
+    }
+    set width(value) {
+      this.ctx.canvas.width = value;
+    }
+    get height() {
+      return this.ctx.canvas.height;
+    }
+    set height(value) {
+      this.ctx.canvas.height = value;
+    }
+    update() {
+      // this.x += 1;
+      // this.y += 1;
+      // this.foo += 2;
+    }
+    render() {
+      return this.ctx.canvas;
+    }
+  }
+
   class CherryBombScene {
     constructor(name) {
       this.sceneIndex = 0;
@@ -179,7 +178,7 @@
       ctx.clearRect(0 ,0, ctx.canvas.width, ctx.canvas.height);
       log(this, `${this.name} render`, this.children[0]);
       this.children.forEach( child => {
-        ctx.drawImage(child.render(), child.x, child.y, child.width, child.height);
+        ctx.drawImage(child.render(), child.pos.x, child.pos.y, child.width, child.height);
         child.update();
       });
     }
