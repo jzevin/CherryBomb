@@ -2,6 +2,8 @@ import {assert, expect} from 'chai';
 import Vector2d from '../src/lib/vector2d';
 const v2d = new Vector2d();
 
+const instMethods = 'add, sub, mult, div, limit, zero, copy, rotate, rotateDeg, dot, heading, angleBetween, angleTo, lerpTo'.split(', ');
+
 describe('Vector2d', function() {
 
   describe('#Vector2d()',function(){
@@ -14,21 +16,10 @@ describe('Vector2d', function() {
       expect(Vector2d).itself.to.respondTo('rad2deg');
       expect(Vector2d).itself.to.respondTo('lerp');
     });
-    it('should respond to add, sub, mul, div, limit, zero, copy, rotate, rotateDeg, dot, heading, angleBetween, angleTo', function() {
-      expect(v2d).itself.to.respondTo('add');
-      expect(v2d).itself.to.respondTo('sub');
-      expect(v2d).itself.to.respondTo('mult');
-      expect(v2d).itself.to.respondTo('div');
-      expect(v2d).itself.to.respondTo('limit');
-      expect(v2d).itself.to.respondTo('zero');
-      expect(v2d).itself.to.respondTo('copy');
-      expect(v2d).itself.to.respondTo('rotate');
-      expect(v2d).itself.to.respondTo('rotateDeg');
-      expect(v2d).itself.to.respondTo('dot');
-      expect(v2d).itself.to.respondTo('heading');
-      expect(v2d).itself.to.respondTo('angleBetween');
-      expect(v2d).itself.to.respondTo('angleTo');
-      expect(v2d).itself.to.respondTo('lerpTo');
+    it(`should respond to ${instMethods.join(', ')}`, function() {
+      instMethods.forEach(m => {
+        expect(v2d).itself.to.respondTo(m);
+      });
       //expect(v2d).itself.to.respondTo('inside');
       //expect(v2d).itself.to.respondTo('outside');
 

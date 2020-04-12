@@ -37,6 +37,12 @@ describe("CherryBomb", () => {
       expect(myScenes[0]).to.be.an.instanceof(CherryBomb.scene);
     });
   });
+  describe("#scene", () => {
+    it("should have Vector2d", () => {
+      expect(CherryBomb).to.have.property("v2d");
+      expect(CherryBomb).itself.to.respondTo('v2d');
+    });
+  });
 });
 
 // CherryBomb

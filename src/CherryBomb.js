@@ -3,6 +3,7 @@
 import { log } from "./lib/utils";
 import CherryBombViewObject from "./lib/viewObject";
 import CherryBombViewText from "./lib/viewText";
+import Vector2d from "./lib/vector2d";
 
 class CherryBombScene {
   constructor(name) {
@@ -113,6 +114,7 @@ class CherryBombProduction {
 export default {
   production: CherryBombProduction,
   scene: CherryBombScene,
+  v2d: Vector2d,
   // for now
   viewObject: CherryBombViewObject,
   viewText: CherryBombViewText
