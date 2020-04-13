@@ -1,86 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background-color: #333;
+        overflow: hidden;
+      }
+      #cnv {
+        background-color: blanchedalmond;
+      }
+    </style>
 
-  <style>
-    html, body { height: 100%; margin: 0;}
-    body { background-color: #333; overflow: hidden;}
-    #cnv { background-color: blanchedalmond;}
-  </style>
+    <canvas id="cnv"></canvas>
 
-  <canvas id="cnv"></canvas>
-  
-  <script src="../dist/cherryBomb.js"></script>
-  <script>
-    const 
-      bmb = new CherryBomb.production(document.querySelector('#cnv')),
-      scene1 = new CherryBomb.scene('the beginning... blast off!'),
-      scene2 = new CherryBomb.scene('the middle.');
-      scene3 = new CherryBomb.scene('the end.');
-      vo = new CherryBomb.viewObject(45, 90, window.innerWidth, window.innerHeight);
-      text1 = new CherryBomb.viewText('viewText 1', 'text1', 0, 0, 150, 40);
-      text2 = new CherryBomb.viewText('viewText 2', 'text2', 0, 45, 150, 40);
-      text3 = new CherryBomb.viewText('viewText 3', 'text3', 0, 90, 150, 40);
+    <script src="../dist/cherryBomb.js"></script>
+    <script>
+      const
+        bmb = new CherryBomb.production(document.querySelector("#cnv")),
+        scene1 = new CherryBomb.scene("the beginning... blast off!"),
+        scene2 = new CherryBomb.scene("the middle.");
+        scene3 = new CherryBomb.scene("the end.");
+        text1 = new CherryBomb.viewText("viewText 1", "text1", {
+          x: 0,
+          y: 0,
+          width: 150,
+          height: 60,
+          background: 'orange',
+          data: {
+            foo: 0
+          },
+          renderCallback: (obj, data) => {
+            data.foo += 1;
+            obj.x += 0.5;
+            return render1(obj, data);
+          }
+        });
+        text2 = new CherryBomb.viewText("viewText 2", "text2", {
+          x: 0,
+          y: 45,
+          width: 150,
+          height: 40,
+          background: 'dodgerblue',
+          data: {
+            foo: 0
+          },
+          renderCallback: (obj, data) => {
+            data.foo += 2;
+            obj.x++;
+            return render1(obj, data);
+          }
+        });
+        text3 = new CherryBomb.viewText("viewText 3", "text3", {
+        x: 0,
+        y: 90,
+        width: 150,
+        height: 40,
+        background: 'hsla(80, 60%, 60%, 0.25)',
+        data: {
+          foo: 0
+        },
+        renderCallback: (obj, data) => {
+          data.foo += 3;
+          obj.x++;
+          if (data.foo > obj.width) data.foo = 0;
+          return render1(obj, data);
+        }
+      });
 
-    function render1(viewText) {
-      viewText.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.95)';
-      viewText.ctx.fillRect(0, 0, viewText.width, viewText.height);
-      viewText.ctx.fillStyle = 'hsla(0, 20%, 100%, 1)';
-      viewText.ctx.fillRect(viewText.foo, 0, 10, 20);
-      viewText.ctx.fillStyle = 'darkorange';
-      viewText.ctx.font = '20px sans-serif';
-      viewText.ctx.fillText(viewText.text, 0, 20, viewText.width);
-      return viewText.ctx.canvas;
-    }
-    
-    console.log(bmb);
-    
-    text1.foo = 0;
-    text1.render = () => {
-      text1.foo += 1;
-      text1.pos.x+=0.5;
-      return render1(text1);
-    };
-    text2.foo = 0;
-    text2.render = () => {
-      text2.foo += 2;
-      text2.pos.x++;
-      return render1(text2);
-    };
-    text3.foo = 0;
-    text3.render = () => {
-      text3.foo += 3;
-      text3.pos.x++;
-      if (text3.foo > text3.width) text3.foo = 0;
-      return render1(text3);
-    };
+      function render1(viewText, data) {
+        viewText.ctx.fillStyle = "hsla(0, 20%, 100%, 1)";
+        viewText.ctx.fillRect(data.foo, 0, 10, 20);
+        viewText.ctx.fillStyle = "#333";
+        viewText.ctx.font = "20px sans-serif";
+        viewText.ctx.fillText(viewText.text, 0, 20, viewText.width);
+      }
 
-    scene1.addChild(text1);
-    scene2.addChild(text2);
-    scene3.addChild(text1);
-    scene3.addChild(text3);
-    
-    bmb.view.addScene(scene1);
-    bmb.view.changeScene(scene1);
-    bmb.view.addScene(scene2);
-    bmb.play();
+      console.log(bmb);
 
-    setTimeout(() => {
+      scene1.addChild(text1);
+      scene2.addChild(text2);
+      scene3.addChild(text1);
+      scene3.addChild(text3);
+
+      bmb.view.addScene(scene1);
+      bmb.view.changeScene(scene1); //should be scene = ...
+      bmb.view.addScene(scene2);
+      bmb.play();
+
+      setTimeout(() => {
         bmb.view.addScene(scene3);
         bmb.view.changeScene(scene2);
-      setTimeout(() => {
-        bmb.view.changeScene(scene3);
         setTimeout(() => {
-          bmb.stop();
-        }, 3500);
+          bmb.view.changeScene(scene3);
+          setTimeout(() => {
+            bmb.stop();
+          }, 7500);
+        }, 1500);
       }, 1500);
-    }, 1500);
-    
-  </script>
-</body>
+    </script>
+  </body>
 </html>

@@ -24,8 +24,9 @@ class CherryBombScene {
     ctx.clearRect(0 ,0, ctx.canvas.width, ctx.canvas.height);
     log(this, `${this.name} render`, this.children[0]);
     this.children.forEach( child => {
-      ctx.drawImage(child.render(), child.pos.x, child.pos.y, child.width, child.height);
-      child.update();
+      child.render();
+      ctx.drawImage(child.ctx.canvas, child.x, child.y, child.width, child.height);
+      // child.update();
     });
   }
 }

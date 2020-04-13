@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const ctx = document.createElement("canvas").getContext("2d");
+      document.body.appendChild(ctx.canvas);
+
+      class Style {
+        constructor(options) {
+          console.log(options);
+          this._computed = {
+            background: options.background || "transparent",
+            border: options.border || {
+              num: 0,
+              unit: "px",
+              style: "solid",
+              color: "transparent",
+            },
+          };
+        }
+        get background() {
+          return this._computed.background;
+        }
+        set background(value) {
+          this._computed.background = value;
+        }
+        get border() {
+          return this._computed.border;
+        }
+        set border(inp) {
+          if (inp instanceof String) console.log(str);
+          this._computed.border = { ...inp };
+        }
+      }
+
+      class Layout {
+        constructor(options) {
+          (this.display = "block"), (this.pos = options.pos || { x: 0, y: 0 });
+          this.h = options.h || 100;
+          this.w = options.w || 100;
+        }
+        get x() {
+          return this.pos.x;
+        }
+        set x(value) {
+          this.pos.x = value;
+        }
+        get y() {
+          return this.pos.y;
+        }
+        set y(value) {
+          this.pos.y = value;
+        }
+      }
+
+      class App {
+        constructor(x = 0, y = 0) {
+          this.Layout = new Layout({ pos: { x, y } });
+          this.style = new Style({
+            background: "orange",
+            border: {
+              size: 3,
+              unit: "px",
+              style: "solid",
+              color: "darkorange",
+            },
+          });
+        }
+        render(t, ctx) {
+          ctx.save();
+          ctx.fillStyle = this.style.background;
+          ctx.fillRect(
+            this.Layout.x,
+            this.Layout.y,
+            this.Layout.w,
+            this.Layout.h
+          );
+          ctx.lineWidth = this.style.border.size;
+          ctx.strokeStyle = this.style.border.color;
+          ctx.strokeRect(
+            this.Layout.x,
+            this.Layout.y,
+            this.Layout.w,
+            this.Layout.h
+          );
+          ctx.restore();
+        }
+      }
+
+      const app = new App(0, 0);
+
+      console.log(ctx);
+      console.log(app);
+
+      app.render(null, ctx);
+    </script>
+  </body>
+</html>
