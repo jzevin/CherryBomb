@@ -30,7 +30,9 @@
         scene1 = new CherryBomb.scene("the beginning... blast off!"),
         scene2 = new CherryBomb.scene("the middle.");
         scene3 = new CherryBomb.scene("the end.");
-        text1 = new CherryBomb.viewText("viewText 1", `${scene1.name}`, {
+        text1 = new CherryBomb.viewText({
+          name: "viewText 1",
+          text: `${scene1.name}`,
           x: 0,
           y: 0,
           width: 150,
@@ -39,13 +41,15 @@
           state: {
             foo: 0
           },
-          render: (obj) => {
-            obj.state = {foo: obj.state.foo += 0.125};
-            obj.x += 0.5;
-            return render1(obj);
-          }
+          update(vt) {
+            vt.state = {foo: vt.state.foo += 0.125};
+            vt.x += 0.5;
+          },
+          render: render1
         });        
-        text2 = new CherryBomb.viewText("viewText 2", `${scene2.name}`, {
+        text2 = new CherryBomb.viewText({
+          name: "viewText 2",
+          text: `${scene2.name}`,
           x: 0,
           y: 45,
           width: 150,
@@ -54,13 +58,15 @@
           state: {
             foo: 0
           },
-          render: (obj) => {
-            obj.state = {foo: obj.state.foo += 0.25};
-            obj.x++;
-            return render1(obj);
-          }
+          update(vt) {
+            vt.state = {foo: vt.state.foo += 0.25};
+            vt.x++;
+          },
+          render: render1
         });
-        text3 = new CherryBomb.viewText("viewText 3", `${scene3.name}`, {
+        text3 = new CherryBomb.viewText({
+          name: "viewText 3",
+          text: `${scene3.name}`,
           x: 0,
           y: 90,
           width: 150,
@@ -69,12 +75,12 @@
           state: {
             foo: 0
           },
-          render: (obj) => {
-            obj.state = {foo: obj.state.foo += 3};
-            obj.x++;
-            if (obj.state.foo > obj.width) obj.state.foo = 0;
-            return render1(obj);
-          }
+          update(vt) {
+            vt.state = {foo: vt.state.foo += 3};
+            vt.x++;
+            if (vt.state.foo > vt.width) vt.state.foo = 0;
+          },
+          render: render1
         });
 
       function render1(viewText) {
@@ -89,7 +95,7 @@
 
       scene1.addChild(text1);
       scene2.addChild(text2);
-      scene3.addChild(text1)
+      scene3.addChild(text1);
       scene3.addChild(text2);
       scene3.addChild(text3);
 

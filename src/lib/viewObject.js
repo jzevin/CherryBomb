@@ -107,40 +107,25 @@ const proxy = {
   },
 };
 
+const func = ()=>{};
+let viewObjCounter = 1;
 export default class CherryBombViewObject {
-  constructor(
-    name,
-    options={
-      x: 0,
-      y: 0,
-      width: 100,
-      height: 100,
-      rotation: 0,
-      scale: 1,
-      state: {},
-      render: undefined
-    }
-  ) {
-    this.protected = Object.entries(options).reduce((p,c) => {
-      p[c[0]] = true;
-      return p;
-    }, {});
-    
+  constructor(options={}) {    
     this._state = {
-      name,
-      render: options.render,
-      ...options.state,
+      name: name || `CB-${viewObjCounter++}`,
+      update: options.update || func,
+      render: options.render || func,
       layout: new Layout({
-        loc: new Vector2d(options.x, options.y),
-        width: options.width,
-        height: options.height,
+        loc: new Vector2d(options.x || 0, options.y || 0),
+        width: options.width || 100,
+        height: options.height || 100,
         rotation: options.rotation || 0,
         scale: options.scale || 1
       }),
       ctx: (() => {
         const cnv = document.createElement("canvas");
-        cnv.width = options.width;
-        cnv.height = options.height;
+        cnv.width = options.width || 100;
+        cnv.height = options.height || 100;
         return cnv.getContext("2d");
       })(),
       style: new Style({
@@ -153,37 +138,50 @@ export default class CherryBombViewObject {
         },
       }),
     };
+    this.state = options.state;
+    console.log(this)
     // return new Proxy(this, proxy);
   }
   set state (obj) {
     for (const key in obj) {
       this._state[key] = obj[key];
+      this.state.dirty = true;
     }
   }
   get state () {
     return this._state;
   }
-  get x() {
+  get name () {
+    return this._state.name;
+  }
+  set name (value) {
+    this._state.name = value;
+    this.state.dirty = true;
+  }
+  get x () {
     return this._state.layout.loc.x;
   }
-  set x(value) {
+  set x (value) {
     this._state.layout.loc.x = value;
+    this.state.dirty = true;
   }
-  get y() {
+  get y () {
     return this._state.layout.loc.y;
   }
-  set y(value) {
+  set y (value) {
     this._state.layout.loc.y = value;
+    this.state.dirty = true;
   }
-  get ctx() {
+  get ctx () {
     return this._state.ctx;
   }
-  get width() {
+  get width () {
     return this._state.layout.width;
   }
   set width(value) {
     this._state.layout.width = value;
     this._state.ctx.canvas.width = value;
+    this.state.dirty = true;
   }
   get height() {
     return this._state.layout.height;
@@ -191,16 +189,21 @@ export default class CherryBombViewObject {
   set height(value) {
     this._state.layout.height = value;
     this._state.ctx.canvas.height = value;
+    this.state.dirty = true;
   }
   // NOTE: can optimize if no changes since last render
-  update() {}
+  update() {
+    this.state.update(this);
+  }
   render() {
+    this.update();
     this.ctx.clearRect(this.x, this.y, this.width, this.height);
-    this.ctx.fillStyle = this._state.style.background;
+    this.ctx.fillStyle = this.state.style.background;
     this.ctx.fillRect(0, 0, this.width, this.height);
-    if(this._state.render) {
-      this._state.render(this, this._state.data);
-    }
+    
+    this.state.render(this);
+    
+    this.state.dirty = false;
     return this.ctx.canvas;
   }
 }
