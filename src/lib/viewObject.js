@@ -195,7 +195,7 @@ export default class CherryBombViewObject {
   // NOTE: can optimize if no changes since last render
   update() {}
   render() {
-    // this.ctx.clearRect(this.x, this.y, this.width, this.height);
+    this.ctx.clearRect(this.x, this.y, this.width, this.height);
     this.ctx.fillStyle = this._state.style.background;
     this.ctx.fillRect(0, 0, this.width, this.height);
     if(this._state.render) {

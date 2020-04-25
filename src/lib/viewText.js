@@ -6,4 +6,10 @@ export default class CherryBombViewText extends CherryBombViewObject {
     super(name, options);
     this.text = text;
   }
+  get text () {
+    return this.state.text;
+  }
+  set text (str) {
+    this.state = {text: str};
+  }
 }

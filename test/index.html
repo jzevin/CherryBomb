@@ -40,7 +40,7 @@
             foo: 0
           },
           render: (obj) => {
-            obj.state = {foo: obj.state.foo += 0.5};
+            obj.state = {foo: obj.state.foo += 0.125};
             obj.x += 0.5;
             return render1(obj);
           }
@@ -55,7 +55,7 @@
             foo: 0
           },
           render: (obj) => {
-            obj.state = {foo: obj.state.foo += 2};
+            obj.state = {foo: obj.state.foo += 0.25};
             obj.x++;
             return render1(obj);
           }
