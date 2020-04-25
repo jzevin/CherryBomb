@@ -191,24 +191,6 @@
     }
   }
 
-  const proxy = {
-    gate: (obj, prop) => {
-      if (obj.protected[prop]) {
-        throw new Error("Can not view a protected property");
-      }
-      return prop in obj ? obj[prop] : 99;
-    },
-    get: (obj, prop) => {
-      return proxy.gate(obj, prop);
-    },
-    set: (obj, prop, value) => {
-      if (obj.protected[prop]) {
-        throw new Error("Can not set a protected property");
-      }
-      return (obj[prop] = value);
-    },
-  };
-
   class CherryBombViewObject {
     constructor(
       name,
@@ -219,15 +201,19 @@
         height: 100,
         rotation: 0,
         scale: 1,
-        data: {},
-        renderCallback: undefined
+        state: {},
+        render: undefined
       }
     ) {
-      this.protected = { protected: true };
-      this.state = {
+      this.protected = Object.entries(options).reduce((p,c) => {
+        p[c[0]] = true;
+        return p;
+      }, {});
+      
+      this._state = {
         name,
-        renderCallback: options.renderCallback,
-        data: options.data,
+        render: options.render,
+        ...options.state,
         layout: new Layout({
           loc: new Vector2d(options.x, options.y),
           width: options.width,
@@ -251,45 +237,53 @@
           },
         }),
       };
-      return new Proxy(this, proxy);
+      // return new Proxy(this, proxy);
+    }
+    set state (obj) {
+      for (const key in obj) {
+        this._state[key] = obj[key];
+      }
+    }
+    get state () {
+      return this._state;
     }
     get x() {
-      return this.state.layout.loc.x;
+      return this._state.layout.loc.x;
     }
     set x(value) {
-      this.state.layout.loc.x = value;
+      this._state.layout.loc.x = value;
     }
     get y() {
-      return this.state.layout.loc.y;
+      return this._state.layout.loc.y;
     }
     set y(value) {
-      this.state.layout.loc.y = value;
+      this._state.layout.loc.y = value;
     }
     get ctx() {
-      return this.state.ctx;
+      return this._state.ctx;
     }
     get width() {
-      return this.state.layout.width;
+      return this._state.layout.width;
     }
     set width(value) {
-      this.state.layout.width = value;
-      this.state.ctx.canvas.width = value;
+      this._state.layout.width = value;
+      this._state.ctx.canvas.width = value;
     }
     get height() {
-      return this.state.layout.height;
+      return this._state.layout.height;
     }
     set height(value) {
-      this.state.layout.height = value;
-      this.state.ctx.canvas.height = value;
+      this._state.layout.height = value;
+      this._state.ctx.canvas.height = value;
     }
     // NOTE: can optimize if no changes since last render
     update() {}
     render() {
       // this.ctx.clearRect(this.x, this.y, this.width, this.height);
-      this.ctx.fillStyle = this.state.style.background;
+      this.ctx.fillStyle = this._state.style.background;
       this.ctx.fillRect(0, 0, this.width, this.height);
-      if(this.state.renderCallback) {
-        this.state.renderCallback(this, this.state.data);
+      if(this._state.render) {
+        this._state.render(this, this._state.data);
       }
       return this.ctx.canvas;
     }

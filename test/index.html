@@ -30,56 +30,56 @@
         scene1 = new CherryBomb.scene("the beginning... blast off!"),
         scene2 = new CherryBomb.scene("the middle.");
         scene3 = new CherryBomb.scene("the end.");
-        text1 = new CherryBomb.viewText("viewText 1", "text1", {
+        text1 = new CherryBomb.viewText("viewText 1", `${scene1.name}`, {
           x: 0,
           y: 0,
           width: 150,
           height: 60,
           background: 'orange',
-          data: {
+          state: {
             foo: 0
           },
-          renderCallback: (obj, data) => {
-            data.foo += 1;
+          render: (obj) => {
+            obj.state = {foo: obj.state.foo += 0.5};
             obj.x += 0.5;
-            return render1(obj, data);
+            return render1(obj);
           }
-        });
-        text2 = new CherryBomb.viewText("viewText 2", "text2", {
+        });        
+        text2 = new CherryBomb.viewText("viewText 2", `${scene2.name}`, {
           x: 0,
           y: 45,
           width: 150,
           height: 40,
           background: 'dodgerblue',
-          data: {
+          state: {
             foo: 0
           },
-          renderCallback: (obj, data) => {
-            data.foo += 2;
+          render: (obj) => {
+            obj.state = {foo: obj.state.foo += 2};
             obj.x++;
-            return render1(obj, data);
+            return render1(obj);
           }
         });
-        text3 = new CherryBomb.viewText("viewText 3", "text3", {
-        x: 0,
-        y: 90,
-        width: 150,
-        height: 40,
-        background: 'hsla(80, 60%, 60%, 0.25)',
-        data: {
-          foo: 0
-        },
-        renderCallback: (obj, data) => {
-          data.foo += 3;
-          obj.x++;
-          if (data.foo > obj.width) data.foo = 0;
-          return render1(obj, data);
-        }
-      });
+        text3 = new CherryBomb.viewText("viewText 3", `${scene3.name}`, {
+          x: 0,
+          y: 90,
+          width: 150,
+          height: 40,
+          background: 'hsla(80, 60%, 60%, 0.25)',
+          state: {
+            foo: 0
+          },
+          render: (obj) => {
+            obj.state = {foo: obj.state.foo += 3};
+            obj.x++;
+            if (obj.state.foo > obj.width) obj.state.foo = 0;
+            return render1(obj);
+          }
+        });
 
-      function render1(viewText, data) {
+      function render1(viewText) {
         viewText.ctx.fillStyle = "hsla(0, 20%, 100%, 1)";
-        viewText.ctx.fillRect(data.foo, 0, 10, 20);
+        viewText.ctx.fillRect(viewText.state.foo, 0, 10, 20);
         viewText.ctx.fillStyle = "#333";
         viewText.ctx.font = "20px sans-serif";
         viewText.ctx.fillText(viewText.text, 0, 20, viewText.width);
@@ -89,7 +89,8 @@
 
       scene1.addChild(text1);
       scene2.addChild(text2);
-      scene3.addChild(text1);
+      scene3.addChild(text1)
+      scene3.addChild(text2);
       scene3.addChild(text3);
 
       bmb.view.addScene(scene1);
