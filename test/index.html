@@ -77,7 +77,7 @@
           },
           update(vt) {
             vt.state = {foo: vt.state.foo += 3};
-            vt.x++;
+            vt.x+=2;
             if (vt.state.foo > vt.width) vt.state.foo = 0;
           },
           render: render1
@@ -111,7 +111,7 @@
           bmb.view.changeScene(scene3);
           setTimeout(() => {
             bmb.stop();
-          }, 7500);
+          }, 5500);
         }, 1500);
       }, 1500);
     </script>

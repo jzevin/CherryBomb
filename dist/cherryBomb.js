@@ -223,7 +223,6 @@
         }),
       };
       this.state = options.state;
-      console.log(this);
       // return new Proxy(this, proxy);
     }
     set state (obj) {
